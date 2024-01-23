@@ -6,7 +6,7 @@ u hate me.
 im in ur house
 9/11 was bad.
 smile
-I hate you
+I hate ${message.author.username}
 kys
 marou
 whats ur opinion on... opinions?
@@ -17,4 +17,4 @@ murd
 murder
 I would never
 *thing* bad
-test
+die
