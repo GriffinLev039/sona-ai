@@ -2,12 +2,9 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, EmbedBuilder, PermissionsBitField, Permissions, MessagePayload } = require('discord.js');
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
-let name = 'you';
-
-
 //Imports files and creates list, removing blank end space created by nano.
 const fs = require('fs');
-const sonaTalk = fs.readFileSync('./txt/sonaSays.txt', 'utf-8').split(/\r?\n/);
+const sonaTalk = fs.readFileSync('./txt/sonaQuotes.txt', 'utf-8').split(/\r?\n/);
 const sonaURL = fs.readFileSync('./txt/sonaGIF.txt', 'utf-8').split(/\r?\n/);
 sonaTalk.pop();
 sonaURL.pop();
@@ -19,33 +16,28 @@ const gifwrite = fs.createWriteStream('./txt/sonaGIf.txt', { flags: 'a' });
 client.on("ready", (x) => {
 
     console.log(`${x.user.tag} is online! ${x.user.tag} says bitch`);
-    client.user.setActivity('Sona.ai');
+    client.user.setActivity('Sona.ai | Use $help');
 });
 
-client.login(process.env.TOKEN); //Logs in with API key
 client.on('messageCreate', async message => {
-    if (message.author.id !== '1198505072691269652') {
-
-        console.log(message.author.username + ' sent the message "' + message.content + '"');
-        name = `<@${message.author.id}>`;
-        name = `${message.author.username}`;
+    console.log(message.author.username + ' sent the message "' + message.content + '"');
+    if (message.author.id !== '1198505072691269652') { //prevents bot from interacting with own messages
         if (message.content.toLowerCase().includes('sona') || message.content.toLowerCase().includes('diplo') || message.author.id === '367853307097513996') { //Does not reply if the sender is itself
-            const quotes = fs.readFileSync('./txt/sonaQuotes.txt', 'utf-8').split(/\r?\n/);
-            const rndm = Math.round(Math.random() * (parseInt(quotes.length) - 1));
+            const quotes = fs.readFileSync('./txt/sonaQuotes.txt', 'utf-8').split(/\r?\n/); //fetches list of quotes
             if (Math.floor(Math.random() * 4) + 1 !== 1) {
-                const randomMessage = quotes[rndm];
+                const randomMessage = quotes[Math.round(Math.random() * (parseInt(quotes.length) - 1))];
                 if (randomMessage && randomMessage.trim() !== '') {
                     await message.reply(randomMessage);
                 }
             } else {
-                const gifs = fs.readFileSync('./txt/sonaGIF.txt', 'utf-8').split(/\r?\n/);
-                const rndmGIF = Math.round(Math.random() * (parseInt(gifs.length) - 1));
-                const randomGIF = gifs[rndmGIF];
+                const gifs = fs.readFileSync('./txt/sonaGIF.txt', 'utf-8').split(/\r?\n/); //fetches list of image/gif URLs
+                const randomGIF = gifs[Math.round(Math.random() * (parseInt(gifs.length) - 1))];
                 if (randomGIF && randomGIF.trim() !== '') {
                     await message.reply(randomGIF);
                 }
             }
         }
+        //I am unsure why I made this a switch-case statement
         switch (true) {
             case message.content.toLowerCase().trim().startsWith('$addquote'):
                 if (message.content.replace(/\$addquote/ig, '').trim() !== '') {
@@ -73,7 +65,7 @@ client.on('messageCreate', async message => {
                 break;
         }
 
-        if (message.author.id === '336240861191077899' && message.content.toLowerCase().trim().replace(/\$removequote/ig, '$removequote').startsWith('$removequote') && message.author.id !== '1198505072691269652') {
+        if (message.author.id === '367853307097513996' && message.content.toLowerCase().trim().replace(/\$removequote/ig, '$removequote').startsWith('$removequote')) {
             const quoteToRemove = message.content.replace(/\$removequote/ig, '').trim();
             const quotes = fs.readFileSync('./txt/sonaQuotes.txt', 'utf-8').split(/\r?\n/);
 
@@ -90,4 +82,8 @@ client.on('messageCreate', async message => {
             message.reply("$addquote <QUOTE> to add a quote \n $listquotes to see all current quotes \n $addgif <URL> to add a gif \n $removequote <KEYWORD> to remove a quote if you're sona");
         }
     }
-}); 
+});
+
+
+client.login(process.env.TOKEN); //Logs in with API key
+
