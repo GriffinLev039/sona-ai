@@ -1,0 +1,13 @@
+Create array of all possible sona bingo elements from sonaBingo.txt
+Use this array to create new sona bingo sheet every 24 hours.
+
+Functions:
+sonaBingoBuilder();
+- Inputs:
+    New array of sonaisms (25 length)
+
+sonaBingoVisualizer();
+
+isNewRequired();
+    - Takes value lastGenerated from lastGenerated (file), compares it to current time. If more than 24 hours have passed since last one was called,
+    generates new bingo.
